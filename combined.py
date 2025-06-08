@@ -158,10 +158,9 @@ def main(args):
     #load clean test dataset
     _, test_dataset = utils.load_dataset(args)
 
-    if args.subset_num_samples is not None:
-        # thiagoads: reduzindo o tamanho do dataset a 100 exemplos para treinamento mais rápido
-        print(f"thiagoads: reduzindo o tamanho do dataset a {args.subset_num_samples} exemplos para treinamento mais rápido")
-        test_dataset = thiagoads.get_subset(test_dataset, num_samples=args.subset_num_samples)
+    if args.thiagoads_subset_param is not None:
+        # thiagoads: reduzindo o tamanho do dataset para treinamento mais rápido
+        test_dataset = thiagoads.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
 
 
     clean_dataloader =  torch.utils.data.DataLoader(test_dataset, batch_size = args.batch_size, shuffle =False)
@@ -286,7 +285,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name',help='Model Choice', default='WRN-16-1')
     parser.add_argument('--model_path' , type=str)
     parser.add_argument('--detector_path', type=str , help="source detector path")
-    parser.add_argument('--subset_num_samples', help='thiagoads: Número de exemplos do dataset', type=int)
+    parser.add_argument('--thiagoads_subset_param', help='Porcentagem de exemplos a serem selecionados do dataset para treinamento e teste', type=float)
 
     parser.add_argument('--attacks', nargs='+', default=['pgd'])
     parser.add_argument('--r_range', help='max radius range', default=16, type = int)

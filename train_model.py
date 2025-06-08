@@ -144,11 +144,10 @@ def get_data_loader(dataset , batch_size, image_size=224):
         print('Dataset not supported')
         exit()
 
-    if args.subset_percent is not None:
-        # thiagoads: reducing dataset size to 10% for faster training
-        print(f"thiagoads: reducing dataset size to {args.subset_percent * 100}% for faster training")
-        train_dataset = thiagoads.get_subset(train_dataset, percentage=args.subset_percent)
-        test_dataset = thiagoads.get_subset(test_dataset, percentage=args.subset_percent)
+    if args.thiagoads_subset_param is not None:
+        # thiagoads: reduzindo dataset para facilitar debug do código
+        train_dataset = thiagoads.get_subset(train_dataset, subset_param=args.thiagoads_subset_param)
+        test_dataset = thiagoads.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
@@ -214,7 +213,7 @@ if __name__ == '__main__':
     #dataset name arg
     parser.add_argument('--name', type=str, help="experiment name for wandb")
     parser.add_argument('--dataset', type=str, default='cub')
-    parser.add_argument('--subset_percent', help='thiagoads: Percentual de exemplos do dataset [0, 1.0]', type=float)
+    parser.add_argument('--thiagoads_subset_param', help='Porcentagem exemplos a serem selecionados do dataset para treinamento e teste', type=float)
 
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--lr', type=float, default=0.01)
