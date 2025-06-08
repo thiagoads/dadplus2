@@ -48,7 +48,7 @@ def lr_scheduler(optimizer, iter_num, max_iter, gamma=10, power=0.75):
     return optimizer
 
 def adapt_detector(detector, loader, args , model, interval_iter=3000):
-
+    print("thiagoads: adapt_detector")
     epochs = args.epochs
     device = next(model.parameters()).device 
     best_acc = -np.Inf

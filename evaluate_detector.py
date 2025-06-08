@@ -18,8 +18,9 @@ def evaluate(loader,detector_base,detector, pseudo_labels=None):
     else:
         detector.eval()
    
-    acc = Accuracy(average='none', num_classes=2).to(device)
-    total_acc = Accuracy(num_classes=2).to(device)
+    # thiagoads: corrigindo erros de diferença de shapes logist e labels
+    acc = Accuracy(average='none', num_classes=2, task='multiclass').to(device)
+    total_acc = Accuracy(num_classes=2, task='multiclass').to(device)
    
     with torch.no_grad():
 

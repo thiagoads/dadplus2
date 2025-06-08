@@ -7,10 +7,12 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 #import svhn datasets from torchvision.datasets
 from torchvision.datasets import SVHN , CIFAR10 , FashionMNIST, MNIST
+from torchvision.transforms.functional import InterpolationMode
 import argparse
 from dataset.cub200 import Cub2011
 from models.resnet import ResNet18
 
+import thiagoads
 import utils
 
 def train_one_epoch(model, optimizer,scheduler, data_loader, device):
@@ -97,7 +99,8 @@ data_augmentation = transforms.Compose([
     transforms.RandomHorizontalFlip(),
     #random resize crop for fmnist datasets
     transforms.RandomResizedCrop(32, scale=(0.8, 1.0), ratio=(1.0, 1.0)),
-    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1), scale=None, shear=None, resample=False, fillcolor=0),
+    # thiagoads: removendo warning do torchvision
+    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1), scale=None, shear=None, interpolation=InterpolationMode.NEAREST, fill=0),
     transforms.ToTensor()
 ])
 
@@ -141,16 +144,21 @@ def get_data_loader(dataset , batch_size, image_size=224):
         print('Dataset not supported')
         exit()
 
+    if args.subset_percent is not None:
+        # thiagoads: reducing dataset size to 10% for faster training
+        print(f"thiagoads: reducing dataset size to {args.subset_percent * 100}% for faster training")
+        train_dataset = thiagoads.get_subset(train_dataset, percentage=args.subset_percent)
+        test_dataset = thiagoads.get_subset(test_dataset, percentage=args.subset_percent)
+
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
     return train_loader, test_loader, test_loader
 
-
 # add python arguments use argparse, add arguments for batch size, learning rate, image size, epochs
 def main(args):
     # set wandb config from args config
-    wandb.init(project='svhn')
+    wandb.init(name=args.name, project="dad++_train_model")
     config = wandb.config
     config.batch_size = args.batch_size
     config.lr = args.lr
@@ -204,7 +212,9 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     #dataset name arg
+    parser.add_argument('--name', type=str, help="experiment name for wandb")
     parser.add_argument('--dataset', type=str, default='cub')
+    parser.add_argument('--subset_percent', help='thiagoads: Percentual de exemplos do dataset [0, 1.0]', type=float)
 
     parser.add_argument('--batch_size', type=int, default=128)
     parser.add_argument('--lr', type=float, default=0.01)

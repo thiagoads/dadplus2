@@ -10,6 +10,7 @@ from dataset.combined_dataset import CombDataset
 from dataset.common_corruption import CommonCorruption
 import evaluate_model
 import evaluate_detector
+import thiagoads
 from utils import get_correct
 import utils
 import train_target_detector
@@ -122,7 +123,7 @@ def main(args):
     print("soft detection:", args.soft_detection)
     
     if args.use_wandb:
-        wandb.init(project="dad")
+        wandb.init(name=args.name, project="dad++_combined")
         wandb.config.update(args)
 
 
@@ -156,8 +157,11 @@ def main(args):
 
     #load clean test dataset
     _, test_dataset = utils.load_dataset(args)
-    # take subset of 300 samples
-    #test_dataset = torch.utils.data.Subset(test_dataset, range(100))
+
+    if args.subset_num_samples is not None:
+        # thiagoads: reduzindo o tamanho do dataset a 100 exemplos para treinamento mais rápido
+        print(f"thiagoads: reduzindo o tamanho do dataset a {args.subset_num_samples} exemplos para treinamento mais rápido")
+        test_dataset = thiagoads.get_subset(test_dataset, num_samples=args.subset_num_samples)
 
 
     clean_dataloader =  torch.utils.data.DataLoader(test_dataset, batch_size = args.batch_size, shuffle =False)
@@ -282,6 +286,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_name',help='Model Choice', default='WRN-16-1')
     parser.add_argument('--model_path' , type=str)
     parser.add_argument('--detector_path', type=str , help="source detector path")
+    parser.add_argument('--subset_num_samples', help='thiagoads: Número de exemplos do dataset', type=int)
 
     parser.add_argument('--attacks', nargs='+', default=['pgd'])
     parser.add_argument('--r_range', help='max radius range', default=16, type = int)
@@ -292,6 +297,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--method', type=str, required=True, help="method used to train target model, different methods use different meand and std")
     parser.add_argument('--use_wandb' ,action='store_true', default=False)
+    parser.add_argument('--name', type=str, help="experiment name for wandb")
     
     parser.add_argument('--detector_base_name', type=str , help="source detector base name. set scatternet if detector base is scatternet", default=None) 
     parser.add_argument('--num_scatternet_layers', type=int, default=3)

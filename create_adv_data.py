@@ -9,7 +9,8 @@ def create_adv_data_detector(dataloader, detector ,dataset, attack):
     # dataloader is for clean images
     print("creating adversarial data")
     attack = adversarial_attack.get_attack(dataset, attack, detector)
-    attack.set_return_type('int') # Save as integer.
+    # thiagoads: dava erro por conta da mudança de versão da lib torchattacks
+    #attack.set_return_type('int') # Save as integer.
     adv_images = []
     labels = []
     for images, cls_labels in tqdm.tqdm(dataloader):
@@ -29,7 +30,8 @@ def create_adv_data_detector_predict_adv_as_clean(dataloader, detector ,dataset,
     # dataloader is for clean images
     print("creating adversarial data")
     attack = adversarial_attack.get_attack(dataset, attack, detector)
-    attack.set_return_type('int') # Save as integer.
+    # thiagoads: dava erro por conta da mudança de versão da lib torchattacks
+    #attack.set_return_type('int') # Save as integer.
     adv_images = []
     labels = []
     for images, cls_labels in tqdm.tqdm(dataloader):
@@ -45,9 +47,11 @@ def create_adv_data_detector_predict_adv_as_clean(dataloader, detector ,dataset,
 
 #create adversarial data on classifier 
 def create_adv_data_classifier(dataloader ,dataset, attack, model):
+    print("thiagoads: create_adv_data_classifier")
     # dataloader is for clean images
     attack = adversarial_attack.get_attack(dataset, attack, model)
-    attack.set_return_type('int') # Save as integer.
+    # thiagoads: dava erro por conta da mudança de versão da lib torchattacks
+    #attack.set_return_type('int') # Save as integer.
     adv_images = []
     labels = []
     for images, cls_labels in tqdm.tqdm(dataloader):
@@ -60,11 +64,13 @@ def create_adv_data_classifier(dataloader ,dataset, attack, model):
     return adv_data
 
 def create_adv_data_detector_classifier(dataloader,dataset, attack,detector , model , batch_size):
+    print("thiagoads: create_adv_data_detector_classifier")
     adv_data = create_adv_data_detector(dataloader, detector,dataset, attack)
     dataloader= torch.utils.data.DataLoader(adv_data, batch_size= batch_size,shuffle=False)
     return create_adv_data_classifier(dataloader ,dataset, attack , model)
 
 def create_adv_data_classifier_detector(dataloader,dataset, attack,detector , model , batch_size):
+    print("thiagoads: create_adv_data_classifier_detector")
     #note here detector is sequential of (detector_base , classifier)
     adv_data = create_adv_data_classifier(dataloader ,dataset, attack , model)
     dataloader= torch.utils.data.DataLoader(adv_data, batch_size= batch_size,shuffle=False)
@@ -73,17 +79,18 @@ def create_adv_data_classifier_detector(dataloader,dataset, attack,detector , mo
 
 # create adversarial image dataset, attack_list is a list of attacks. for every batch attack is randomly selected from attack_list
 def create_adv_attack_multiple_attacks(dataloader,dataset,attack_list,model,sample_percent=[], batch_size=64):
-    
+    print("thiagoads: create_adv_attack_multiple_attacks")
     #change batch size of dataloader to 64
     # each batch randomly uses attack from the attack list. for better representation of each attack we use smaller batch size of 64
-    dataloader= torch.utils.data.DataLoader(dataloader.dataset, batch_size= 512,shuffle=False)
+    dataloader= torch.utils.data.DataLoader(dataloader.dataset, batch_size= batch_size,shuffle=False)
 
     
     #create attack list 
     attacks = []
     for a  in attack_list:
         attacks.append(adversarial_attack.get_attack(dataset, a, model))
-        attacks[-1].set_return_type('int') # Save as integer.
+        # thiagoads: dava erro por conta da mudança de versão da lib torchattacks
+        #attacks[-1].set_return_type('int') # Save as integer.
     
     #create torch multinomial distribution 
     if len(sample_percent) == 0:
@@ -107,6 +114,7 @@ def create_adv_attack_multiple_attacks(dataloader,dataset,attack_list,model,samp
 
 
 def create_adv_attack_unsupervised(dataloader,dataset,attack_list,model,sample_percent=[], batch_size=64):
+    print("thiagoads: create_adv_attack_unsupervised")
     dataloader= torch.utils.data.DataLoader(dataloader.dataset, batch_size= 512,shuffle=False)
     def hungarian_evaluate(model, dataloader):
         model.eval()

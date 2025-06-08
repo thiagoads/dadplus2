@@ -5,6 +5,7 @@ import create_adv_data
 from dataset.combined_dataset import CombDataset
 from evaluate_detector import evaluate
 from metric import AverageMeter
+import thiagoads
 import utils
 import tqdm
 import torch.nn as nn
@@ -118,6 +119,12 @@ def main(args):
     #load dataset
     train_dataset, test_dataset = utils.load_dataset(args)
 
+    if args.subset_percent is not None:
+        # thiagoads: reduzindo dataset para facilitar debug do código
+        print(f'thiagoads: reduzindo dataset a {args.subset_percent * 100}% para facilitar debug do código')
+        train_dataset = thiagoads.get_subset(train_dataset, percentage=args.subset_percent)
+        test_dataset = thiagoads.get_subset(test_dataset, percentage=args.subset_percent)
+
     
     #create adv train and test dataset
     attack = args.attack
@@ -188,6 +195,7 @@ if __name__ == '__main__':
     parser.add_argument('--name', type=str, help="experiment name for wandb")
     parser.add_argument('--dataroot')
     parser.add_argument('--dataset',help='Dataset') ## 'source/arbitrary' dataset
+    parser.add_argument('--subset_percent', help='thiagoads: Percentual de exemplos do dataset [0, 1.0]', type=float)
     parser.add_argument('--batch_size',help='Batch Size',default=128,type=int) 
     parser.add_argument('--model_name',help='Model Choice', default='resnet18_source') ## 'model' -> F_s
     parser.add_argument('--model_path', type=str)
@@ -211,7 +219,7 @@ if __name__ == '__main__':
     utils.fix_seed_value(args.seed)
     
     if args.use_wandb:
-        wandb.init(name=args.name, project="dad")
+        wandb.init(name=args.name, project="dad++_arbitrary_detector")
 
     main(args)
     
