@@ -30,6 +30,7 @@ from models.resnet import ResNet18, ResNet34
 from models.resnet_source import resnet18
 from models.s_wrn import Network
 
+import thiagoads
 
 def load_adv_data(path):
     adv_images, adv_labels = torch.load(path)
@@ -349,6 +350,8 @@ def get_model(model_name, droprate=0.005, channels=3, num_classes=10):
         return rersnet50.resnet50(p=droprate)
     elif model_name == "vgg16":
         return VGG('VGG16')
+    elif model_name == "mobilenet_v3_small":
+        return thiagoads.get_mobilenet_v3_small_model(num_classes = num_classes, channels = channels, droprate=droprate)
     else:
         raise Exception ("model not defined" , model_name)
 
@@ -410,6 +413,7 @@ def get_normalized_model(args):
                 base_model.load_state_dict(new_state_dict)
 
             else:
+                print("thiagoads: carregando modelo do path", args.model_path)
                 state_dict = torch.load(args.model_path, map_location="cpu")
                 base_model.load_state_dict(state_dict)
         

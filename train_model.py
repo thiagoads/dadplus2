@@ -89,8 +89,12 @@ def get_mean_and_std(dataset):
         raise ValueError("Invalid dataset name")
 
 def create_model(model_name, channels):
-     if model_name == "resnet18":
-        return ResNet18(p=0, channels=channels,num_classes=10)    
+    if model_name == "resnet18":
+        return ResNet18(p=0, channels=channels,num_classes=10)
+    if model_name == "mobilenet_v3_small":
+        return thiagoads.get_mobilenet_v3_small_model(num_classes=10, 
+                                                      channels=channels, 
+                                                      droprate=0.005)
 
 import torch
 from torchvision import transforms
