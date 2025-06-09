@@ -352,6 +352,8 @@ def get_model(model_name, droprate=0.005, channels=3, num_classes=10):
         return VGG('VGG16')
     elif model_name == "mobilenet_v3_small":
         return thiagoads.get_mobilenet_v3_small_model(num_classes = num_classes, channels = channels, droprate=droprate)
+    elif model_name == "shufflenet_v2_x0_5":
+        return thiagoads.get_shufflenet_v2_x0_5_model(num_classes = num_classes, channels = channels, droprate=droprate)
     else:
         raise Exception ("model not defined" , model_name)
 

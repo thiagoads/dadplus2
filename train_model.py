@@ -95,6 +95,10 @@ def create_model(model_name, channels):
         return thiagoads.get_mobilenet_v3_small_model(num_classes=10, 
                                                       channels=channels, 
                                                       droprate=0.005)
+    if model_name == "shufflenet_v2_x0_5":
+        return thiagoads.get_shufflenet_v2_x0_5_model(num_classes=10, 
+                                                      channels=channels, 
+                                                      droprate=0.005)
 
 import torch
 from torchvision import transforms

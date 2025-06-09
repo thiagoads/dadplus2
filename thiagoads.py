@@ -1,7 +1,7 @@
 import torch
 import logging
 
-from torchvision.models import mobilenet_v3_small
+from torchvision.models import mobilenet_v3_small, shufflenet_v2_x0_5
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -59,3 +59,22 @@ def get_mobilenet_v3_small_model(num_classes, channels, droprate=0.005):
     if channels == 1:  # Ajustar para grayscale
         mobilenet_v3_small_model.features[0][0] = torch.nn.Conv2d(channels, 16, kernel_size=3, stride=2, padding=1, bias=False)
     return mobilenet_v3_small_model
+
+def get_shufflenet_v2_x0_5_model(num_classes, channels, droprate=0.005):
+    """
+    Creates a ShuffleNet model with the specified number of classes and input channels.
+
+    Args:
+        num_classes (int): The number of output classes for the model.
+        channels (int): The number of input channels. If set to 1, the model will be adjusted for grayscale input.
+        droprate (float, optional): Dropout rate for the model. Defaults to 0.005.
+
+    Returns:
+        torch.nn.Module: A ShuffleNet model configured with the specified parameters.
+    """
+    logger.info(f"Criando ShuffleNet model com {num_classes} classes e {channels} input channels.")
+    from torchvision.models import shufflenet_v2_x0_5
+    shufflenet_model = shufflenet_v2_x0_5(num_classes=num_classes)
+    if channels == 1:  # Ajustar para grayscale
+        shufflenet_model.conv1[0] = torch.nn.Conv2d(channels, 24, kernel_size=3, stride=2, padding=1, bias=False)
+    return shufflenet_model
