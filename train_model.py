@@ -10,7 +10,7 @@ from torchvision.datasets import SVHN , CIFAR10 , FashionMNIST, MNIST
 from torchvision.transforms.functional import InterpolationMode
 import argparse
 from dataset.cub200 import Cub2011
-from dataset.rival10 import RIVAL10
+from dataset.rival10 import RIVAL10, get_rival10_mean_and_std
 from models.resnet import ResNet18
 
 import thiagoads
@@ -87,8 +87,7 @@ def get_mean_and_std(dataset):
     elif dataset =='cub':
         return (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
     elif dataset =='rival10':
-        #TODO investigar melhor o impacto disso
-        return (0, 0, 0), (0, 0, 0)  # RIVAL-10 does not have standard normalization
+        return get_rival10_mean_and_std(apply_transform=False)
     else:
         raise ValueError("Invalid dataset name")
 
@@ -153,8 +152,8 @@ def get_data_loader(dataset , batch_size, image_size=224):
         train_dataset = Cub2011(root  = "/media2/inder/dad_shubham/data-free-defense/clean_data/cub",train=True, transform=train_transform, download=True)
         test_dataset = Cub2011(root="/media2/inder/dad_shubham/data-free-defense/clean_data/cub",train=False, transform=test_transform, download=True)
     elif dataset =="rival10":
-        train_dataset = RIVAL10(root  = "clean_data/rival10",train=True, transform=None, download=True)
-        test_dataset = RIVAL10(root="clean_data/rival10",train=False, transform=None, download=True)        
+        train_dataset = RIVAL10(root  = "clean_data/rival10",train=True, transform=train_transform, download=True)
+        test_dataset = RIVAL10(root="clean_data/rival10",train=False, transform=test_transform, download=True)        
     else:
         print('Dataset not supported')
         exit()

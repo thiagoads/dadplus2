@@ -57,13 +57,13 @@ Original Dataset() class for the RIVAL-10 dataset
 Refer to https://github.com/mmoayeri/RIVAL10/blob/gh-pages/datasets/local_rival10.py 
 """
 class LocalRIVAL10(Dataset):
-    def __init__(self, root, train=True, masks_dict=True, include_aug=False):
+    def __init__(self, root, train=True, masks_dict=True, include_aug=False, apply_transform=True):
         '''
         Set masks_dict to be true to include tensor of attribute segmentations when retrieving items.
-
-        See __getitem__ for more documentation. 
+        Set apply_transform to False to return raw PIL images instead of transformed images.
         '''
         self.train = train
+        self.apply_transform = apply_transform  # Added apply_transform flag
         self.data_root = os.path.join(root, 'train' if self.train else 'test') + '/'  # Adicionado '/' ao final
         self.masks_dict = masks_dict
 
@@ -175,10 +175,14 @@ class LocalRIVAL10(Dataset):
                 mask_uri = mask_dict[attr]
                 mask = save_uri_as_img(mask_uri)
                 imgs.append(Image.fromarray(np.uint8(255*mask)))
-        
-        transformed_imgs = self.transform(imgs)
-        img = transformed_imgs.pop(0)
-        merged_mask = transformed_imgs.pop(0)
+
+        if self.apply_transform:  # Apply transformation if flag is True
+            transformed_imgs = self.transform(imgs)
+            img = transformed_imgs.pop(0)
+            merged_mask = transformed_imgs.pop(0)
+        else:
+            merged_mask = merged_mask_img  # Keep as PIL image
+
         out = dict({'img':img, 
                     'attr_labels': attr_labels, 
                     'changed_attrs': changed_attrs,
@@ -187,17 +191,17 @@ class LocalRIVAL10(Dataset):
                     'og_class_label': class_label})
         if self.masks_dict:
             attr_masks = [torch.zeros(img.shape) for i in range(len(_ALL_ATTRS)+1)]
-            for i, attr in enumerate(mask_dict):
-                # if attr == 'entire-object':
-                ind = -1 if attr == 'entire-object' else attr_to_idx(attr)
-                attr_masks[ind] = transformed_imgs[i]
+            if self.apply_transform:
+                for i, attr in enumerate(mask_dict):
+                    ind = -1 if attr == 'entire-object' else attr_to_idx(attr)
+                    attr_masks[ind] = transformed_imgs[i]
             out['attr_masks'] = torch.stack(attr_masks)
         
         return out
     
 
 class RIVAL10(Dataset):
-    def __init__(self, root, train, transform, download):
+    def __init__(self, root = "clean_data/rival10", train = True, transform = None, download = True):
         # Cria a pasta root e subpastas caso não existam
         os.makedirs(root, exist_ok=True)
         dataset_zip_path = os.path.join(root, "rival10.zip")
@@ -229,7 +233,7 @@ class RIVAL10(Dataset):
                     zip_ref.extract(file, root)
             print("Extraction complete.")
 
-        self.dataset = LocalRIVAL10(root=dataset_extract_path, train=train, masks_dict=False, include_aug=False)
+        self.dataset = LocalRIVAL10(root=dataset_extract_path, train=train, masks_dict=False, include_aug=False, apply_transform=False)
         self.transform = transform
 
     def __len__(self):
@@ -242,3 +246,48 @@ class RIVAL10(Dataset):
             img = self.transform(img)
         label = data['og_class_label']
         return img, label
+
+def get_rival10_mean_and_std(apply_transform = False):
+    if apply_transform:
+        # calculado com os valores já transformados para 224x224, 
+        # cropped (randomicamente) e augmented (randomicamente) e normalizados
+        # obs: as randomização podem levar a pequenas variações desses valores
+        applied_transform_mean = (0.4818, 0.4722, 0.4230)
+        applied_transform_std = (0.2524, 0.2472, 0.2675)
+        return applied_transform_mean, applied_transform_std
+    else:
+        # acho que é o mais indicado para usar
+        to_tensor_transform_mean = (0.4810, 0.4733, 0.4248)
+        to_tensor_transform_std = (0.2569, 0.2518, 0.2725)
+        return to_tensor_transform_mean, to_tensor_transform_std   
+
+# if __name__ == "__main__":
+
+#     from torch.utils.data import DataLoader
+#     from torchvision.transforms import ToTensor
+
+#     # Dataset RIVAL10
+#     dataset = RIVAL10(root="clean_data/rival10", train=True, transform=ToTensor(), download=False)
+#     loader = DataLoader(dataset, batch_size=32, shuffle=False, num_workers=4)
+
+#     # Inicializa listas para acumular valores
+#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+#     channel_sum = torch.zeros(3).to(device)
+#     channel_squared_sum = torch.zeros(3).to(device)
+#     total_pixels = 0
+
+#     for images, _ in loader:
+#         images = images.to(device)
+#         batch_samples = images.size(0)
+#         total_pixels += batch_samples * images.size(2) * images.size(3)
+        
+#         # Soma acumulada dos valores dos canais
+#         channel_sum += images.sum(dim=(0, 2, 3))
+#         channel_squared_sum += (images ** 2).sum(dim=(0, 2, 3))
+
+#     # Calcula média e desvio padrão
+#     mean = channel_sum / total_pixels
+#     std = torch.sqrt(channel_squared_sum / total_pixels - mean ** 2)
+
+#     print(f"Mean: {mean}")
+#     print(f"Std: {std}")

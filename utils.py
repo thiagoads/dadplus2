@@ -11,7 +11,7 @@ from torch import nn
 from torch.utils.data import TensorDataset, dataset
 from torchvision import transforms
 
-from dataset.rival10 import RIVAL10
+from dataset.rival10 import RIVAL10, get_rival10_mean_and_std
 import models.resnet50 as rersnet50
 import models.zskt_wresnet as zskt_wresnet
 from create_adv_data import (create_adv_data_classifier,
@@ -229,8 +229,8 @@ def load_dataset(args):
         train_data= None
     elif args.dataset == "rival10":
         print('thiagoads: carregando rival10 dataset')
-        train_data = RIVAL10(root=dataroot,train=True, transform=None, download=True)
-        test_data = RIVAL10(root=dataroot,train=False, transform=None, download=True)
+        train_data = RIVAL10(root=dataroot,train=True, transform=preprocess, download=True)
+        test_data = RIVAL10(root=dataroot,train=False, transform=preprocess, download=True)
     else:
         print(f'{dataroot} / {dataset} doesnt exist')
 
@@ -476,8 +476,8 @@ def get_mean_and_std(args):
         #std = [0.2023, 0.1994, 0.2010]
         mean, std = (0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616)
     elif args.method in ["vanila"] and args.dataset=="rival10":
-        # TODO investivar melhor o impacto disso
-        mean, std = (0, 0, 0), (1, 1, 1) #rival10 is not normalized
+        # thiagoads: rival10 dataset tem um transformação padrão que pode resultar em mean e std diferentes
+        mean, std = get_rival10_mean_and_std(apply_transform=False)
     elif args.method in ["vanila"] and args.dataset=="fmnist":
         #mean = [0.5]
         #std = [0.5]
