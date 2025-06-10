@@ -78,6 +78,9 @@ def get_attack(dataset, attack, model):
             eps , alpha , steps = None ,0.003 , 50    
         elif dataset  == "cub":
             eps, alpha, steps = 3/255, 1/255, 20       
+        elif dataset  == "rival10":
+            print('thiagoads: Attack using pgd on rival10 dataset')
+            eps, alpha, steps = 8 / 255, 2 / 255, 20 # igual ao cifar10
         if attack == 'pgd':
             attack = torchattacks.PGD(model, eps=eps, alpha=alpha, steps=steps)
         elif attack == 'bim':
@@ -121,6 +124,9 @@ def get_attack(dataset, attack, model):
             eps = None
         elif dataset  == "cub":
             eps= 3/255
+        elif dataset  == "rival10":
+            print('thiagoads: Attack using AA on rival10 dataset')
+            eps = 8 / 255
         attack = torchattacks.AutoAttack(model, eps=eps, n_classes=10, version='standard')
     else:
         #throw exception
