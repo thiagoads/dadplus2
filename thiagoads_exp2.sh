@@ -14,7 +14,7 @@
 # | DAD_AD_IMG_SIZE    |  Tamanho da imagem do arbitrary dataset       |
 # +--------------------------------------------------------------------+
 
-export DAD_EXP="experiment3"               
+export DAD_EXP="experiment_2"               
 export DAD_MODEL_PATH="mobilenet"               
 export DAD_TM="mobilenet_v3_small"       
 export DAD_AM="mobilenet_v3_small"       

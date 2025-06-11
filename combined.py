@@ -123,7 +123,7 @@ def main(args):
     print("soft detection:", args.soft_detection)
     
     if args.use_wandb:
-        wandb.init(name=args.name, project="dad++_combined")
+        wandb.init(name=args.name, project="dad++")
         wandb.config.update(args)
 
 

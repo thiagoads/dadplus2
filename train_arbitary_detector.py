@@ -218,7 +218,7 @@ if __name__ == '__main__':
     utils.fix_seed_value(args.seed)
     
     if args.use_wandb:
-        wandb.init(name=args.name, project="dad++_arbitrary_detector")
+        wandb.init(name=args.name, project="dad++")
 
     main(args)
     

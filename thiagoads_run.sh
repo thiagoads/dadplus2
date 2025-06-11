@@ -11,7 +11,7 @@ mkdir -p ./logs
 
 # stage1: treinamento do target model
 python train_model.py                                                \
---name "${DAD_EXP}"                                                  \
+--name "${DAD_EXP}_stage_1"                                          \
 --dataset ${DAD_TD}                                                  \
 --batch_size 32                                                      \
 --lr 0.01                                                            \
@@ -26,7 +26,7 @@ python train_model.py                                                \
 
 # stage2: treinamento do arbitrary model
 python train_model.py                                                \
---name "${DAD_EXP}"                                                  \
+--name "${DAD_EXP}_stage_2"                                          \
 --dataset ${DAD_AD}                                                  \
 --batch_size 32                                                      \
 --lr 0.01                                                            \
@@ -41,7 +41,7 @@ python train_model.py                                                \
 
 # stage3: treinamento do source detector para reconhecer ataques
 python train_arbitary_detector.py                                     \
---name "${DAD_EXP}"                                                   \
+--name "${DAD_EXP}_stage_3"                                           \
 --dataroot clean_data/${DAD_AD}                                       \
 --dataset ${DAD_AD}                                                   \
 --batch_size 32                                                       \
@@ -59,7 +59,7 @@ python train_arbitary_detector.py                                     \
 
 # stage4: treinamento do target detector com UDA e avaliação diante de ataques
 python combined.py                                                   \
---name "${DAD_EXP}"                                                  \
+--name "${DAD_EXP}_stage _4"                                         \
 --dataset ${DAD_TD}                                                  \
 --batch_size 32                                                      \
 --model_name ${DAD_TM}                                               \

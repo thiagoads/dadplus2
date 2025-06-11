@@ -171,7 +171,7 @@ def get_data_loader(dataset , batch_size, image_size=224):
 # add python arguments use argparse, add arguments for batch size, learning rate, image size, epochs
 def main(args):
     # set wandb config from args config
-    wandb.init(name=args.name, project="dad++_train_model")
+    wandb.init(name=args.name, project="dad++")
     config = wandb.config
     config.batch_size = args.batch_size
     config.lr = args.lr
