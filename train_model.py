@@ -119,13 +119,13 @@ data_augmentation = transforms.Compose([
 def get_data_loader(dataset , batch_size, image_size=224):
     mean, std = get_mean_and_std(dataset)
     train_transform = transforms.Compose([
-        transforms.Resize(32),
+        transforms.Resize(image_size),
         data_augmentation,
         transforms.Normalize(mean, std),
       ])
     
     test_transform = transforms.Compose([
-        transforms.Resize(32),
+        transforms.Resize(image_size),
         transforms.ToTensor(),
         transforms.Normalize(mean, std)
 
