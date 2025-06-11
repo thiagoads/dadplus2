@@ -138,8 +138,8 @@ def main(args):
             adv_test_data = torch.load(adv_test_data_path, map_location="cpu")
     else:
         print("creating adv data")
-        adv_train_data = create_adv_data.create_adv_attack_multiple_attacks(torch.utils.data.DataLoader(train_dataset),args.dataset,["pgd"],model,sample_percent=[])
-        adv_test_data = create_adv_data.create_adv_attack_multiple_attacks(torch.utils.data.DataLoader(test_dataset),args.dataset,["pgd"],model,sample_percent=[])
+        adv_train_data = create_adv_data.create_adv_attack_multiple_attacks(torch.utils.data.DataLoader(train_dataset),args.dataset,[attack],model,sample_percent=[])
+        adv_test_data = create_adv_data.create_adv_attack_multiple_attacks(torch.utils.data.DataLoader(test_dataset),args.dataset,[attack],model,sample_percent=[])
 
         #save dataset
         torch.save(adv_train_data, adv_data_path)

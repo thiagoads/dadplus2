@@ -46,19 +46,19 @@ def get_attack(dataset, attack, model):
     
     if attack in [ 'pgd' , 'bim','fgsm' ]:
         if dataset == "cifar10":
-            print('Attack using pgd on cifar10 dataset')
+            print(f'Attack using {attack} on cifar10 dataset')
             eps, alpha, steps = 8 / 255, 2 / 255, 20
         elif dataset == "cifar100":
-            print('Attack using pgd on cifar100 dataset')
+            print(f'Attack using {attack} on cifar100 dataset')
             eps, alpha, steps = 8 / 255, 2 / 255, 20
         elif dataset == "mnist":
-            print('Attack using pgd on mnist dataset')
+            print(f'Attack using {attack} on mnist dataset')
             eps, alpha, steps = 0.3, 0.01, 100
         elif dataset == "fmnist":
-            print('Attack using pgd on fmnist dataset')
+            print(f'Attack using {attack} on fmnist dataset')
             eps, alpha, steps = 0.2, 0.02, 100
         elif dataset == "svhn":
-            print("Attack using pgd on svhn dataset")
+            print(f"Attack using {attack} on svhn dataset")
             #eps, alpha, steps = 4 / 255, 2 / 255, 20
             eps, alpha, steps = 8/255,2/255,20
         elif dataset =="stl":
@@ -79,7 +79,7 @@ def get_attack(dataset, attack, model):
         elif dataset  == "cub":
             eps, alpha, steps = 3/255, 1/255, 20       
         elif dataset  == "rival10":
-            print('thiagoads: Attack using pgd on rival10 dataset')
+            print(f'thiagoads: Attack using {attack} on rival10 dataset')
             eps, alpha, steps = 8 / 255, 2 / 255, 20 # igual ao cifar10
         if attack == 'pgd':
             attack = torchattacks.PGD(model, eps=eps, alpha=alpha, steps=steps)
