@@ -12,7 +12,7 @@ git clone https://github.com/thiagoads/dadplus2.git data-free-adversarial-defens
 cd data-free-adversarial-defense
 
 # acessando as customizações
-cd thiagoads
+cd thiagoads/environment
 
 # criando o ambiente com Python 3.10
 conda env create -f environment.yml
