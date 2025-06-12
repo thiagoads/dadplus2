@@ -7,13 +7,14 @@ from torchvision.models import mobilenet_v3_small, shufflenet_v2_x0_5
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-def get_subset(dataset, subset_param, seed=None):
+def get_subset(dataset, subset_param, seed=None, stratified=True):
     """
     Returns a subset of the dataset based on the subset_param.
     If subset_param is None, the original dataset is returned.
     If subset_param is a float between 0 and 1, it is treated as a percentage.
     If subset_param is an integer, it is treated as the number of samples.
     The optional seed parameter is used to set the random generator seed.
+    If stratified is True, the subset is created with stratified sampling.
     """
     if subset_param is None:
         logger.info("subset_param é None. Retornando o dataset original.")
@@ -25,20 +26,49 @@ def get_subset(dataset, subset_param, seed=None):
 
     dataset_length = len(dataset)
 
-    if isinstance(subset_param, float):
-        if not (0 < subset_param <= 1):
-            raise ValueError("thiagoads: Percentage must be between 0 and 1.")
-        logger.info(f"Método get_subset foi invocado para criar um subset com {subset_param * 100:.2f}% do dataset.")
-        idxs = torch.randperm(dataset_length)[:int(dataset_length * subset_param)]
-    elif isinstance(subset_param, int):
-        if subset_param > dataset_length:
-            raise ValueError("num_samples cannot be greater than the dataset length.")
-        logger.info(f"Método get_subset foi invocado para criar um subset com {subset_param} exemplos.")
-        idxs = torch.randperm(dataset_length)[:subset_param]
+    if stratified:
+        targets = torch.tensor([dataset[i][1] for i in range(dataset_length)])  # Assuming dataset[i][1] is the label
+        if isinstance(subset_param, float):
+            if not (0 < subset_param <= 1):
+                raise ValueError("thiagoads: Percentage must be between 0 and 1.")
+            logger.info(f"Método get_subset foi invocado para criar um subset estratificado com {subset_param * 100:.2f}% do dataset.")
+            num_samples_per_class = int((dataset_length * subset_param) / len(torch.unique(targets)))
+        elif isinstance(subset_param, int):
+            if subset_param > dataset_length:
+                raise ValueError("num_samples cannot be greater than the dataset length.")
+            logger.info(f"Método get_subset foi invocado para criar um subset estratificado com {subset_param} exemplos.")
+            num_samples_per_class = subset_param // len(torch.unique(targets))
+        else:
+            raise TypeError("thiagoads: subset_param must be a float (percentage) or an int (number of samples).")
+
+        idxs = []
+        for cls in torch.unique(targets):
+            cls_idxs = torch.where(targets == cls)[0]
+            selected_cls_idxs = cls_idxs[torch.randperm(len(cls_idxs))[:num_samples_per_class]]
+            idxs.append(selected_cls_idxs)
+
+        idxs = torch.cat(idxs)
     else:
-        raise TypeError("thiagoads: subset_param must be a float (percentage) or an int (number of samples).")
+        if isinstance(subset_param, float):
+            if not (0 < subset_param <= 1):
+                raise ValueError("thiagoads: Percentage must be between 0 and 1.")
+            logger.info(f"Método get_subset foi invocado para criar um subset com {subset_param * 100:.2f}% do dataset.")
+            idxs = torch.randperm(dataset_length)[:int(dataset_length * subset_param)]
+        elif isinstance(subset_param, int):
+            if subset_param > dataset_length:
+                raise ValueError("num_samples cannot be greater than the dataset length.")
+            logger.info(f"Método get_subset foi invocado para criar um subset com {subset_param} exemplos.")
+            idxs = torch.randperm(dataset_length)[:subset_param]
+        else:
+            raise TypeError("thiagoads: subset_param must be a float (percentage) or an int (number of samples).")
 
     logger.info(f"Dataset original: {dataset_length} exemplos | Subset final: {len(idxs)} exemplos.")
+    
+    # imprimindo a distribuição de classes no subset
+    subset_targets = torch.tensor([dataset[i][1] for i in idxs])  # Assuming dataset[i][1] is the label
+    class_counts = {int(cls): int((subset_targets == cls).sum()) for cls in torch.unique(subset_targets)}
+    logger.info(f"Distribuição de exemplos no subset por classe: {class_counts}")
+    
     return torch.utils.data.Subset(dataset, idxs)
 
 

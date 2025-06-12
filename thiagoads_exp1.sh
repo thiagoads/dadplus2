@@ -7,8 +7,8 @@
 # | DAD_MODEL_PATH     |  Caminho de salvamento da experiemento/modelo |
 # | DAD_TM             |  Target Model                                 |
 # | DAD_AM             |  Arbitray Model                               |
-# | DAD_TD="cifar10"   |  Target Dataset                               |
-# | DAD_AD="fmnist"    |  Arbitrary Dataset                            |
+# | DAD_TD             |  Target Dataset                               |
+# | DAD_AD             |  Arbitrary Dataset                            |
 # | DAD_ATTACK         |  Método de Ataque                             |
 # | DAD_TD_IMG_SIZE    |  Tamanho da imagem do target dataset          |
 # | DAD_AD_IMG_SIZE    |  Tamanho da imagem do arbitrary dataset       |
