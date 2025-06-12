@@ -64,10 +64,10 @@ def get_subset(dataset, subset_param, seed=None, stratified=True):
 
     logger.info(f"Dataset original: {dataset_length} exemplos | Subset final: {len(idxs)} exemplos.")
     
-    # imprimindo a distribuição de classes no subset
-    subset_targets = torch.tensor([dataset[i][1] for i in idxs])  # Assuming dataset[i][1] is the label
-    class_counts = {int(cls): int((subset_targets == cls).sum()) for cls in torch.unique(subset_targets)}
-    logger.info(f"Distribuição de exemplos no subset por classe: {class_counts}")
+    if stratified:
+        subset_targets = torch.tensor([dataset[i][1] for i in idxs])  # Assuming dataset[i][1] is the label
+        class_counts = {int(cls): int((subset_targets == cls).sum()) for cls in torch.unique(subset_targets)}
+        logger.info(f"Distribuição de exemplos no subset por classe: {class_counts}")
     
     return torch.utils.data.Subset(dataset, idxs)
 

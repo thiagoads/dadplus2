@@ -149,8 +149,8 @@ def get_data_loader(dataset , batch_size, image_size=224):
         train_dataset = MNIST(root='clean_data/mnist', train=True, transform=train_transform, download=True)
         test_dataset = MNIST(root='clean_data/mnist', train=False, transform=test_transform, download=True)
     elif dataset =="cub":
-        train_dataset = Cub2011(root  = "/media2/inder/dad_shubham/data-free-defense/clean_data/cub",train=True, transform=train_transform, download=True)
-        test_dataset = Cub2011(root="/media2/inder/dad_shubham/data-free-defense/clean_data/cub",train=False, transform=test_transform, download=True)
+        train_dataset = Cub2011(root  = "clean_data/cub200",train=True, transform=train_transform, download=True)
+        test_dataset = Cub2011(root="clean_data/cub200",train=False, transform=test_transform, download=True)
     elif dataset =="rival10":
         train_dataset = RIVAL10(root  = "clean_data/rival10",train=True, transform=train_transform, download=True)
         test_dataset = RIVAL10(root="clean_data/rival10",train=False, transform=test_transform, download=True)        
