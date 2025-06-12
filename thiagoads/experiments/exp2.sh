@@ -25,4 +25,4 @@ export DAD_TD_IMG_SIZE=224
 export DAD_AD_IMG_SIZE=32
 
 
-./thiagoads_run.sh
+./run.sh

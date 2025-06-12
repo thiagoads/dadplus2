@@ -103,7 +103,6 @@ def get_shufflenet_v2_x0_5_model(num_classes, channels, droprate=0.005):
         torch.nn.Module: A ShuffleNet model configured with the specified parameters.
     """
     logger.info(f"Criando ShuffleNet model com {num_classes} classes e {channels} input channels.")
-    from torchvision.models import shufflenet_v2_x0_5
     shufflenet_model = shufflenet_v2_x0_5(num_classes=num_classes)
     if channels == 1:  # Ajustar para grayscale
         shufflenet_model.conv1[0] = torch.nn.Conv2d(channels, 24, kernel_size=3, stride=2, padding=1, bias=False)

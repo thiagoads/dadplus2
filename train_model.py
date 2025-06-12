@@ -10,7 +10,7 @@ from torchvision.datasets import SVHN , CIFAR10 , FashionMNIST, MNIST
 from torchvision.transforms.functional import InterpolationMode
 import argparse
 from dataset.cub200 import Cub2011
-from dataset.rival10 import RIVAL10, get_rival10_mean_and_std
+from thiagoads.rival10 import RIVAL10, get_rival10_mean_and_std
 from models.resnet import ResNet18
 
 import thiagoads
@@ -95,11 +95,11 @@ def create_model(model_name, channels):
     if model_name == "resnet18":
         return ResNet18(p=0, channels=channels,num_classes=10)
     if model_name == "mobilenet_v3_small":
-        return thiagoads.get_mobilenet_v3_small_model(num_classes=10, 
+        return thiagoads.custom.get_mobilenet_v3_small_model(num_classes=10, 
                                                       channels=channels, 
                                                       droprate=0.005)
     if model_name == "shufflenet_v2_x0_5":
-        return thiagoads.get_shufflenet_v2_x0_5_model(num_classes=10, 
+        return thiagoads.custom.get_shufflenet_v2_x0_5_model(num_classes=10, 
                                                       channels=channels, 
                                                       droprate=0.005)
 
@@ -160,8 +160,8 @@ def get_data_loader(dataset , batch_size, image_size=224):
 
     if args.thiagoads_subset_param is not None:
         # thiagoads: reduzindo dataset para facilitar debug do código
-        train_dataset = thiagoads.get_subset(train_dataset, subset_param=args.thiagoads_subset_param)
-        test_dataset = thiagoads.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
+        train_dataset = thiagoads.custom.get_subset(train_dataset, subset_param=args.thiagoads_subset_param)
+        test_dataset = thiagoads.custom.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)

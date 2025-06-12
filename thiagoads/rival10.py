@@ -18,9 +18,9 @@ import requests  # Adicionado para realizar o download
 import zipfile
 
 # UPDATE _DATA_ROOT to '{path to dir where rival10.zip is unzipped}/RIVAL10/'
-# _DATA_ROOT = "/home/thiagoads/Downloads/RIVAL10/{}/"
-# _LABEL_MAPPINGS = '/home/thiagoads/Downloads/RIVAL10/meta/label_mappings.json'
-# _WNID_TO_CLASS = '/home/thiagoads/Downloads/RIVAL10/meta/wnid_to_class.json'
+# _DATA_ROOT = None
+# _LABEL_MAPPINGS = './datasets/label_mappings.json'
+# _WNID_TO_CLASS = './datasets/wnid_to_class.json'
 
 _ALL_ATTRS = ['long-snout', 'wings', 'wheels', 'text', 'horns', 'floppy-ears',
               'ears', 'colored-eyes', 'tail', 'mane', 'beak', 'hairy', 

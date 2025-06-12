@@ -11,7 +11,7 @@ from torch import nn
 from torch.utils.data import TensorDataset, dataset
 from torchvision import transforms
 
-from dataset.rival10 import RIVAL10, get_rival10_mean_and_std
+from thiagoads.rival10 import RIVAL10, get_rival10_mean_and_std
 import models.resnet50 as rersnet50
 import models.zskt_wresnet as zskt_wresnet
 from create_adv_data import (create_adv_data_classifier,
@@ -356,9 +356,9 @@ def get_model(model_name, droprate=0.005, channels=3, num_classes=10):
     elif model_name == "vgg16":
         return VGG('VGG16')
     elif model_name == "mobilenet_v3_small":
-        return thiagoads.get_mobilenet_v3_small_model(num_classes = num_classes, channels = channels, droprate=droprate)
+        return thiagoads.custom.get_mobilenet_v3_small_model(num_classes = num_classes, channels = channels, droprate=droprate)
     elif model_name == "shufflenet_v2_x0_5":
-        return thiagoads.get_shufflenet_v2_x0_5_model(num_classes = num_classes, channels = channels, droprate=droprate)
+        return thiagoads.custom.get_shufflenet_v2_x0_5_model(num_classes = num_classes, channels = channels, droprate=droprate)
     else:
         raise Exception ("model not defined" , model_name)
 
