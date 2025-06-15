@@ -160,7 +160,7 @@ def main(args):
 
     if args.thiagoads_subset_param is not None:
         # thiagoads: reduzindo o tamanho do dataset para treinamento mais rápido
-        test_dataset = thiagoads.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
+        test_dataset = thiagoads.custom.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
 
 
     clean_dataloader =  torch.utils.data.DataLoader(test_dataset, batch_size = args.batch_size, shuffle =False)

@@ -11,7 +11,6 @@ from torch import nn
 from torch.utils.data import TensorDataset, dataset
 from torchvision import transforms
 
-from thiagoads.rival10 import RIVAL10, get_rival10_mean_and_std
 import models.resnet50 as rersnet50
 import models.zskt_wresnet as zskt_wresnet
 from create_adv_data import (create_adv_data_classifier,
@@ -32,6 +31,7 @@ from models.resnet_source import resnet18
 from models.s_wrn import Network
 
 import thiagoads
+from thiagoads.rival10 import RIVAL10, get_rival10_mean_and_std
 
 def load_adv_data(path):
     adv_images, adv_labels = torch.load(path)

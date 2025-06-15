@@ -121,8 +121,8 @@ def main(args):
 
     if args.thiagoads_subset_param is not None:
         # thiagoads: reduzindo dataset para facilitar debug do código
-        train_dataset = thiagoads.get_subset(train_dataset, subset_param=args.thiagoads_subset_param)
-        test_dataset = thiagoads.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
+        train_dataset = thiagoads.custom.get_subset(train_dataset, subset_param=args.thiagoads_subset_param)
+        test_dataset = thiagoads.custom.get_subset(test_dataset, subset_param=args.thiagoads_subset_param)
 
     
     #create adv train and test dataset
