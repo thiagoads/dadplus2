@@ -22,7 +22,7 @@ export DAD_TD="cifar10"
 export DAD_AD="rival10"                   
 export DAD_ATTACK="fgsm"
 export DAD_TD_IMG_SIZE=32
-export DAD_AD_IMG_SIZE=224
+export DAD_AD_IMG_SIZE=32
 
 
 $(dirname "$0")/run.sh
