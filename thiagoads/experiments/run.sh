@@ -16,11 +16,11 @@ python train_model.py                                                \
 --batch_size 32                                                      \
 --lr 0.01                                                            \
 --image_size ${DAD_TD_IMG_SIZE}                                      \
---epochs 1                                                           \
+--epochs 100                                                         \
 --model_name ${DAD_TM}                                               \
 --save_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_TD}/target_model.pt \
 --wandb                                                              \
---thiagoads_subset_param 0.01                                        \
+#--thiagoads_subset_param 0.01                                        \
 
 
 
@@ -31,11 +31,11 @@ python train_model.py                                                \
 --batch_size 32                                                      \
 --lr 0.01                                                            \
 --image_size ${DAD_AD_IMG_SIZE}                                      \
---epochs 1                                                           \
+--epochs 100                                                         \
 --model_name ${DAD_AM}                                               \
 --save_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_AD}/arbitrary_model.pt \
 --wandb                                                              \
---thiagoads_subset_param 0.01                                        \
+#--thiagoads_subset_param 0.01                                        \
 
 
 
@@ -50,10 +50,10 @@ python train_arbitary_detector.py                                     \
 --attack ${DAD_ATTACK}                                                \
 --gpu 0                                                               \
 --method vanila                                                       \
---epochs 1                                                            \
+--epochs 10                                                           \
 --seed 0                                                              \
 --use_wandb                                                           \
---thiagoads_subset_param 0.01                                         \
+#--thiagoads_subset_param 0.01                                         \
 
 
 
@@ -71,7 +71,7 @@ python combined.py                                                   \
 --droprate 0.005                                                     \
 --seed 0                                                             \
 --lr 0.005                                                           \
---epochs 1                                                           \
+--epochs 10                                                          \
 --s_model ${DAD_AM}                                                  \
 --s_dataset ${DAD_AD}                                                \
 --ent_par 0.8                                                        \
@@ -84,6 +84,6 @@ python combined.py                                                   \
 --retrain_detector                                                   \
 --recreate_adv_data                                                  \
 --use_wandb                                                          \
---thiagoads_subset_param 0.01                                        \
+#--thiagoads_subset_param 0.01                                        \
 
 echo "Experimento concluído com sucesso!"
