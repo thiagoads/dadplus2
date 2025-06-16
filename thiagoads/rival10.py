@@ -247,47 +247,67 @@ class RIVAL10(Dataset):
         label = data['og_class_label']
         return img, label
 
-def get_rival10_mean_and_std(apply_transform = False):
-    if apply_transform:
-        # calculado com os valores já transformados para 224x224, 
-        # cropped (randomicamente) e augmented (randomicamente) e normalizados
-        # obs: as randomização podem levar a pequenas variações desses valores
-        applied_transform_mean = (0.4818, 0.4722, 0.4230)
-        applied_transform_std = (0.2524, 0.2472, 0.2675)
-        return applied_transform_mean, applied_transform_std
-    else:
-        # acho que é o mais indicado para usar
-        to_tensor_transform_mean = (0.4810, 0.4733, 0.4248)
-        to_tensor_transform_std = (0.2569, 0.2518, 0.2725)
-        return to_tensor_transform_mean, to_tensor_transform_std   
+def get_rival10_mean_and_std(image_size=32):
+    mean_std_values = {
+        224: {
+            "mean": (0.4810, 0.4733, 0.4248),
+            "std": (0.2569, 0.2518, 0.2725)
+        },
+        32: {
+            "mean": (0.4811, 0.4733, 0.4249),
+            "std": (0.2343, 0.2293, 0.2523)
+        }
+    }
+
+    if image_size not in mean_std_values:
+        raise ValueError(f"Mean and std values for image_size={image_size} are not registered.")
+
+    return mean_std_values[image_size]["mean"], mean_std_values[image_size]["std"]
 
 # if __name__ == "__main__":
 
-#     from torch.utils.data import DataLoader
-#     from torchvision.transforms import ToTensor
+    # print(get_rival10_mean_and_std())
+    # print(get_rival10_mean_and_std(image_size=32))
+    # print(get_rival10_mean_and_std(image_size=224))
 
-#     # Dataset RIVAL10
-#     dataset = RIVAL10(root="clean_data/rival10", train=True, transform=ToTensor(), download=False)
-#     loader = DataLoader(dataset, batch_size=32, shuffle=False, num_workers=4)
+    # from torch.utils.data import DataLoader
+    # from torchvision.transforms import ToTensor, Compose, Resize
 
-#     # Inicializa listas para acumular valores
-#     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-#     channel_sum = torch.zeros(3).to(device)
-#     channel_squared_sum = torch.zeros(3).to(device)
-#     total_pixels = 0
+    # transform = transforms.Compose([
+    #     transforms.Resize(32), # retirar em caso de querer calcular pro dataset original
+    #     transforms.ToTensor()
+    # ])
 
-#     for images, _ in loader:
-#         images = images.to(device)
-#         batch_samples = images.size(0)
-#         total_pixels += batch_samples * images.size(2) * images.size(3)
+    # # Dataset RIVAL10
+    # dataset = RIVAL10(root="clean_data/rival10", train=True, transform=transform, download=False)
+    # loader = DataLoader(dataset, batch_size=32, shuffle=False, num_workers=4)
+
+    # # Inicializa listas para acumular valores
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # channel_sum = torch.zeros(3).to(device)
+    # channel_squared_sum = torch.zeros(3).to(device)
+    # total_pixels = 0
+
+    # for images, _ in loader:
+    #     images = images.to(device)
+    #     batch_samples = images.size(0)
+    #     total_pixels += batch_samples * images.size(2) * images.size(3)
         
-#         # Soma acumulada dos valores dos canais
-#         channel_sum += images.sum(dim=(0, 2, 3))
-#         channel_squared_sum += (images ** 2).sum(dim=(0, 2, 3))
+    #     # Soma acumulada dos valores dos canais
+    #     channel_sum += images.sum(dim=(0, 2, 3))
+    #     channel_squared_sum += (images ** 2).sum(dim=(0, 2, 3))
 
-#     # Calcula média e desvio padrão
-#     mean = channel_sum / total_pixels
-#     std = torch.sqrt(channel_squared_sum / total_pixels - mean ** 2)
+    # # Calcula média e desvio padrão
+    # mean = channel_sum / total_pixels
+    # std = torch.sqrt(channel_squared_sum / total_pixels - mean ** 2)
 
-#     print(f"Mean: {mean}")
-#     print(f"Std: {std}")
+    # print(f"Mean: {mean}")
+    # print(f"Std: {std}")
+
+    # Resize(224), ToTensor(), apply_transform = false
+    # Mean: tensor([0.4810, 0.4733, 0.4248], device='cuda:0')
+    # Std: tensor([0.2569, 0.2518, 0.2725], device='cuda:0')
+
+    # Resize(32), ToTensor(), apply_transform = false
+    # Mean: tensor([0.4811, 0.4733, 0.4249], device='cuda:0')
+    # Std: tensor([0.2343, 0.2293, 0.2523], device='cuda:0')

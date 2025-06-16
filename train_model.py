@@ -87,7 +87,7 @@ def get_mean_and_std(dataset):
     elif dataset =='cub':
         return (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
     elif dataset =='rival10':
-        return get_rival10_mean_and_std(apply_transform=False)
+        return get_rival10_mean_and_std()
     else:
         raise ValueError("Invalid dataset name")
 

@@ -477,7 +477,7 @@ def get_mean_and_std(args):
         mean, std = (0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616)
     elif args.method in ["vanila"] and args.dataset=="rival10":
         # thiagoads: rival10 dataset tem um transformação padrão que pode resultar em mean e std diferentes
-        mean, std = get_rival10_mean_and_std(apply_transform=False)
+        mean, std = get_rival10_mean_and_std()
     elif args.method in ["vanila"] and args.dataset=="fmnist":
         #mean = [0.5]
         #std = [0.5]
