@@ -15,12 +15,12 @@
 # +--------------------------------------------------------------------+
 
 export DAD_EXP="experiment_1"               
-export DAD_MODEL_PATH="mobilenet"               
-export DAD_TM="mobilenet_v3_small"       
-export DAD_AM="mobilenet_v3_small"       
+export DAD_MODEL_PATH="resnet18"               
+export DAD_TM="resnet18"       
+export DAD_AM="resnet18"       
 export DAD_TD="cifar10"                  
 export DAD_AD="rival10"                   
-export DAD_ATTACK="fgsm"
+export DAD_ATTACK="pgd"
 export DAD_TD_IMG_SIZE=32
 export DAD_AD_IMG_SIZE=32
 
