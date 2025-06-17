@@ -28,10 +28,10 @@ python train_model.py                                                \
 python train_model.py                                                \
 --name "${DAD_EXP}_stage_2"                                          \
 --dataset ${DAD_AD}                                                  \
---batch_size 32                                                      \
+--batch_size 64                                                      \
 --lr 0.01                                                            \
 --image_size ${DAD_AD_IMG_SIZE}                                      \
---epochs 100                                                         \
+--epochs 50                                                          \
 --model_name ${DAD_AM}                                               \
 --save_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_AD}/arbitrary_model.pt \
 --wandb                                                              \
@@ -44,7 +44,7 @@ python train_arbitary_detector.py                                     \
 --name "${DAD_EXP}_stage_3"                                           \
 --dataroot clean_data/${DAD_AD}                                       \
 --dataset ${DAD_AD}                                                   \
---batch_size 32                                                       \
+--batch_size 128                                                      \
 --model_name ${DAD_AM}                                                \
 --model_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_AD}/arbitrary_model.pt \
 --attack ${DAD_ATTACK}                                                \
@@ -61,7 +61,7 @@ python train_arbitary_detector.py                                     \
 python combined.py                                                   \
 --name "${DAD_EXP}_stage _4"                                         \
 --dataset ${DAD_TD}                                                  \
---batch_size 32                                                      \
+--batch_size 64                                                      \
 --model_name ${DAD_TM}                                               \
 --model_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_TD}/target_model.pt \
 --detector_path ./checkpoints/${DAD_EXP}/${DAD_MODEL_PATH}/${DAD_AD}/${DAD_AD}_${DAD_ATTACK}_seed_0_source_detector.pt \
@@ -76,7 +76,7 @@ python combined.py                                                   \
 --s_dataset ${DAD_AD}                                                \
 --ent_par 0.8                                                        \
 --cls_par 0.3                                                        \
---correction_batch_size 64                                           \
+--correction_batch_size 256                                          \
 --r_range 16                                                         \
 --soft_detection_r 32                                                \
 --log_path ./logs/logs_balanced.txt                                  \
