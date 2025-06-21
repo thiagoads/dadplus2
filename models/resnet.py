@@ -91,7 +91,9 @@ class ResNet(nn.Module):
         out = self.layer2(out)
         out = self.layer3(out)
         out = self.layer4(out)
-        out = F.avg_pool2d(out, 4)
+        # thiagoads: corrigindo o tamanho de features para usar average pooling adaptativo
+        # https://docs.pytorch.org/vision/main/_modules/torchvision/models/resnet.html#resnet18
+        out = F.adaptive_avg_pool2d(out, (1, 1))  # Ajusta para (1, 1)
         feature = out.view(out.size(0), -1)
 
         feature = self.dropout(feature)
