@@ -19,10 +19,10 @@ export DAD_MODEL_PATH="resnet18"
 export DAD_TM="resnet18"       
 export DAD_AM="resnet18"       
 export DAD_TD="cifar10"                  
-export DAD_AD="rival10"                   
-export DAD_ATTACK="pgd"
+export DAD_AD="fmnist"                   
+export DAD_ATTACK="fgsm"
 export DAD_TD_IMG_SIZE=32
-export DAD_AD_IMG_SIZE=224
+export DAD_AD_IMG_SIZE=28
 
 
 $(dirname "$0")/run.sh

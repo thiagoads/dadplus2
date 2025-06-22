@@ -44,7 +44,7 @@ def correct_data_ssim(model, data, labels, r_range ,pop, return_corr_data=True,d
         out_detect = detector(logits)
 
         # thiagoads: TODO especificar dimensão para não dar warning
-        det_pred = torch.nn.functional.softmax(out_detect)
+        det_pred = torch.nn.functional.softmax(out_detect, dim = 1)
         min_r = soft_detection_r * det_pred[:,0]        #update this using confidence score
         min_r = torch.where(min_r <4, 4, min_r)
         min_r = min_r.long()
